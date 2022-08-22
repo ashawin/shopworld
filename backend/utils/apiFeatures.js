@@ -8,7 +8,7 @@ class ApiFeatures {
         const keyword = this.queryString.keyword ? {
             name: {
                 $regex: this.queryString.keyword,
-                Option: 'i'
+                $options: 'i'
             }
         } : {}
 
@@ -30,7 +30,7 @@ class ApiFeatures {
     pagination(resPerPage) {
         const currentPage = Number(this.queryString.page) || 1;
         const skip = resPerPage * (currentPage - 1);
-        this.query = this.query.limit(resPerPage).limit(skip);
+        this.query = this.query.limit(resPerPage).skip(skip);
         return this;
     }
 }

@@ -9,7 +9,6 @@ const user = require('../models/user');
 
 exports.registerUser = catchAsyncError(async (req, res, next) => {
     const { name, email, password } = req.body;
-
     const user = await User.create({
         name,
         email,
@@ -19,7 +18,7 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
             url: ''
         }
     })
-    console.log('name', user)
+
     const token = user.getJwtToken();
     res.status(201).json({
         success: true,
@@ -93,14 +92,16 @@ exports.getUserProfile = catchAsyncError(async (req, res, next) => {
 })
 
 exports.updatePassword = catchAsyncError(async (req, res, next) => {
+  
     const user = await User.findById(req.user.id).select('+password');
     const isMatched = user.comparepassword(req.body.oldPassword);
+   
     if (!isMatched) {
         return next(ErrorHandler('Old Password did not matched', 401))
     }
     user.password = req.body.password;
     await user.save();
-    sendToken(user, 200, res);
+   sendToken(user, 200, res);
 
 })
 
