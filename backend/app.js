@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 var cookieParser = require('cookie-parser')
 const bodyParser = require("body-parser");
+const path=require('path');
 
 /** bodyParser.urlencoded(options)
  * Parses the text as URL encoded data (which is how browsers tend to send form data from regular forms set to POST)
@@ -26,11 +27,14 @@ const order = require('./routes/order');
 const payment = require('./routes/payment');
 
 
-
+app.use(express.static(path.join(__dirname,"public","build")))
 app.use('/api/v1', products);
 app.use('/api/v1', auth);
 app.use('/api/v1', order);
 app.use('/api/v1', payment);
+app.get("*",async(req,res)=>{
+    res.sendFile(path.join(__dirname,"public","build","index.html"))
+})
 app.use(errorMiddleare);
 
 module.exports = app;
